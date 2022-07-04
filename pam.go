@@ -14,7 +14,6 @@ char *string_from_argv(int, char**);
 char *get_user(pam_handle_t *pamh);
 int get_uid(char *user);
 */
-
 import "C"
 
 func init() {
