@@ -51,9 +51,10 @@ func pam_sm_authenticate(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char)
 	defer C.free(unsafe.Pointer(cUsername))
 
 	cPassword := C.get_password(pamh)
-	if cPassword != nil {
-		defer C.free(unsafe.Pointer(cPassword))
+	if cUsername == nil {
+		return C.PAM_USER_UNKNOWN
 	}
+	defer C.free(unsafe.Pointer(cPassword))
 
 	uid := int(C.get_uid(cUsername))
 	if uid < 0 {
