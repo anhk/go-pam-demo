@@ -49,11 +49,17 @@ func pam_sm_authenticate(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char)
 	}
 	defer C.free(unsafe.Pointer(cUsername))
 
+	cPassword := C.get_passowrd(pamh)
+	if cPassword != nil {
+		defer C.free(unsafe.Pointer(cPassword))
+	}
+
 	uid := int(C.get_uid(cUsername))
 	if uid < 0 {
 		return C.PAM_USER_UNKNOWN
 	}
-	log("pam_sm_authenticate: user: %v, flags: %x, slice: %v", C.GoString(C.get_user(pamh)), flags, sliceFromArgv(argc, argv))
+	log("pam_sm_authenticate: user: %v, password: %v flags: %x, slice: %v",
+		C.GoString(cUsername), C.GoString(cPassword), flags, sliceFromArgv(argc, argv))
 	r := pamAuthenticate(os.Stderr, uid, C.GoString(cUsername), sliceFromArgv(argc, argv))
 	if r == AuthError {
 		return C.PAM_AUTH_ERR

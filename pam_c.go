@@ -56,6 +56,19 @@ char *get_user(pam_handle_t *pamh) {
   return strdup(user);
 }
 
+// get_password pulls the password out of the pam handle.
+char *get_password(pam_handle_t *pamh) {
+  if (!pamh)
+    return NULL;
+
+  int pam_err = 0;
+  const char *password;
+  if ((pam_err = pam_get_item(pamh, PAM_AUTHTOK, (const void**)&password)) != PAM_SUCCESS)
+    return NULL;
+
+  return strdup(password);
+}
+
 // owner_uid returns the owner of a given file, if can be read.
 int owner_uid(char *path) {
   struct stat sb;
