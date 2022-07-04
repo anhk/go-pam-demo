@@ -1,11 +1,26 @@
 package main
 
-import "C"
 import (
 	"os"
 	"unsafe"
 )
 
+/*
+#cgo LDFLAGS: -lpam -fPIC
+#include <security/pam_appl.h>
+#include <stdlib.h>
+
+char *string_from_argv(int, char**);
+char *get_user(pam_handle_t *pamh);
+int get_uid(char *user);
+*/
+
+import "C"
+
+func init() {
+	if !disablePtrace() {
+	}
+}
 func sliceFromArgv(argc C.int, argv **C.char) []string {
 	r := make([]string, 0, argc)
 	for i := 0; i < int(argc); i++ {
