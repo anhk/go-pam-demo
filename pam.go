@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"log/syslog"
 	"os"
 	"unsafe"
 )
@@ -20,6 +22,15 @@ func init() {
 	if !disablePtrace() {
 	}
 }
+
+func log(format string, args ...interface{}) {
+	l, err := syslog.New(syslog.LOG_AUTH|syslog.LOG_WARNING, "pam-demo")
+	if err != nil {
+		return
+	}
+	l.Warning(fmt.Sprintf(format, args...))
+}
+
 func sliceFromArgv(argc C.int, argv **C.char) []string {
 	r := make([]string, 0, argc)
 	for i := 0; i < int(argc); i++ {
@@ -36,17 +47,20 @@ func pam_sm_authenticate(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char)
 	if cUsername == nil {
 		return C.PAM_USER_UNKNOWN
 	}
+	log("username: %v", cUsername)
 	defer C.free(unsafe.Pointer(cUsername))
 
 	uid := int(C.get_uid(cUsername))
 	if uid < 0 {
 		return C.PAM_USER_UNKNOWN
 	}
+	log("uid: %v", uid)
 
 	r := pamAuthenticate(os.Stderr, uid, C.GoString(cUsername), sliceFromArgv(argc, argv))
 	if r == AuthError {
 		return C.PAM_AUTH_ERR
 	}
+	log("pam_sm_authenticate return PAM_SUCCESS")
 	return C.PAM_SUCCESS
 }
 
