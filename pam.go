@@ -53,7 +53,7 @@ func pam_sm_authenticate(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char)
 	if uid < 0 {
 		return C.PAM_USER_UNKNOWN
 	}
-
+	log("pam_sm_authenticate: user: %v, flags: %x, slice: %v", C.GoString(C.get_user(pamh)), flags, sliceFromArgv(argc, argv))
 	r := pamAuthenticate(os.Stderr, uid, C.GoString(cUsername), sliceFromArgv(argc, argv))
 	if r == AuthError {
 		return C.PAM_AUTH_ERR
@@ -63,13 +63,13 @@ func pam_sm_authenticate(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char)
 
 //export pam_sm_setcred
 func pam_sm_setcred(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
-	log("pam_sm_setcred: user: %v, slice: %v", C.GoString(C.get_user(pamh)), sliceFromArgv(argc, argv))
+	log("pam_sm_setcred: user: %v, flags: %x, slice: %v", C.GoString(C.get_user(pamh)), flags, sliceFromArgv(argc, argv))
 	return C.PAM_IGNORE
 }
 
 //export pam_sm_acct_mgmt
 func pam_sm_acct_mgmt(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
-	log("pam_sm_acct_mgmt: user: %v, slice: %v", C.GoString(C.get_user(pamh)), sliceFromArgv(argc, argv))
+	log("pam_sm_acct_mgmt: user: %v, flags: %x, slice: %v", C.GoString(C.get_user(pamh)), flags, sliceFromArgv(argc, argv))
 	// PAM_ACCT_EXPIRED
 	// PAM_AUTH_ERR
 	// PAM_NEW_AUTHTOK_REQD
@@ -80,20 +80,20 @@ func pam_sm_acct_mgmt(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.
 
 //export pam_sm_open_session
 func pam_sm_open_session(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
-	log("pam_sm_open_session: user: %v, slice: %v", C.GoString(C.get_user(pamh)), sliceFromArgv(argc, argv))
+	log("pam_sm_open_session: user: %v, flags: %x, slice: %v", C.GoString(C.get_user(pamh)), flags, sliceFromArgv(argc, argv))
 	// PAM_SESSION_ERR
 	return C.PAM_SUCCESS
 }
 
 //export pam_sm_close_session
 func pam_sm_close_session(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
-	log("pam_sm_close_session: user: %v, slice: %v", C.GoString(C.get_user(pamh)), sliceFromArgv(argc, argv))
+	log("pam_sm_close_session: user: %v, flags: %x, slice: %v", C.GoString(C.get_user(pamh)), flags, sliceFromArgv(argc, argv))
 	// PAM_SESSION_ERR
 	return C.PAM_SUCCESS
 }
 
 //export pam_sm_chauthtok
 func pam_sm_chauthtok(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
-	log("pam_sm_chauthtok: user: %v, slice: %v", C.GoString(C.get_user(pamh)), sliceFromArgv(argc, argv))
+	log("pam_sm_chauthtok: user: %v, flags: %x, slice: %v", C.GoString(C.get_user(pamh)), flags, sliceFromArgv(argc, argv))
 	return C.PAM_SUCCESS
 }
