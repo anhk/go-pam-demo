@@ -5,5 +5,8 @@ OBJ = pam_demo.so
 module:
 	go build -buildmode=c-shared -o ${OBJ}
 
+prepare:
+	apt install libpam0g-dev
+
 clean:
 	rm -fr ${OBJ}
