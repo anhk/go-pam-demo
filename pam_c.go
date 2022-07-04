@@ -49,10 +49,10 @@ char *get_user(pam_handle_t *pamh) {
     return NULL;
 
   int pam_err = 0;
-  const char *user;
+  const char *user = NULL;
   if ((pam_err = pam_get_item(pamh, PAM_USER, (const void**)&user)) != PAM_SUCCESS)
     return NULL;
-
+  if (user == NULL) return NULL;
   return strdup(user);
 }
 
@@ -63,7 +63,9 @@ char *get_password(pam_handle_t *pamh) {
 
   int pam_err = 0;
   const char *password = NULL;
-  if ((pam_err = pam_get_item(pamh, PAM_AUTHTOK, (const void**)&password)) != PAM_SUCCESS)
+  //if ((pam_err = pam_get_item(pamh, PAM_AUTHTOK, (const void**)&password)) != PAM_SUCCESS)
+  //  return NULL;
+  if ((pam_err = pam_get_authtok(pamh, (const char**)&password, "Password:")) != PAM_SUCCESS)
     return NULL;
   if (password == NULL) return NULL;
   return strdup(password);
