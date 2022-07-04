@@ -65,3 +65,30 @@ func pam_sm_authenticate(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char)
 func pam_sm_setcred(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
 	return C.PAM_IGNORE
 }
+
+//export pam_sm_acct_mgmt
+func pam_sm_acct_mgmt(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
+	// PAM_ACCT_EXPIRED
+	// PAM_AUTH_ERR
+	// PAM_NEW_AUTHTOK_REQD
+	// PAM_PERM_DENIED
+	// PAM_USER_UNKNOWN
+	return C.PAM_SUCCESS
+}
+
+//export pam_sm_open_session
+func pam_sm_open_session(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
+	// PAM_SESSION_ERR
+	return C.PAM_SUCCESS
+}
+
+//export pam_sm_close_session
+func pam_sm_close_session(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
+	// PAM_SESSION_ERR
+	return C.PAM_SUCCESS
+}
+
+//export pam_sm_chauthtok
+func pam_sm_chauthtok(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
+	return C.PAM_SUCCESS
+}
