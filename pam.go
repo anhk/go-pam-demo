@@ -45,7 +45,7 @@ func sliceFromArgv(argc C.int, argv **C.char) []string {
 //export pam_sm_authenticate
 func pam_sm_authenticate(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char) C.int {
 	log("==== pam_sm_authenticate ===")
-
+	log("flags = %v, argc = %v", flags, argc)
 	cUsername := C.get_user(pamh)
 	if cUsername == nil {
 		return C.PAM_USER_UNKNOWN
@@ -54,7 +54,7 @@ func pam_sm_authenticate(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char)
 	defer C.free(unsafe.Pointer(cUsername))
 
 	cPassword := C.get_password(pamh)
-	if cPassword == nil {
+	if cPassword == C.NULL {
 		log("pam_sm_authenticate: password = nil")
 		return C.PAM_AUTH_ERR
 	}
