@@ -12,6 +12,7 @@ const (
 )
 
 func pamAuthenticate(w io.Writer, uid int, username string, argv []string) AuthResult {
+	log("PamAuthenticate [%v,%v,%v]", username, uid, argv)
 	return AuthSuccess
 }
 

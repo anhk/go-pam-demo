@@ -47,20 +47,17 @@ func pam_sm_authenticate(pamh *C.pam_handle_t, flags, argc C.int, argv **C.char)
 	if cUsername == nil {
 		return C.PAM_USER_UNKNOWN
 	}
-	log("username: %v", cUsername)
 	defer C.free(unsafe.Pointer(cUsername))
 
 	uid := int(C.get_uid(cUsername))
 	if uid < 0 {
 		return C.PAM_USER_UNKNOWN
 	}
-	log("uid: %v", uid)
 
 	r := pamAuthenticate(os.Stderr, uid, C.GoString(cUsername), sliceFromArgv(argc, argv))
 	if r == AuthError {
 		return C.PAM_AUTH_ERR
 	}
-	log("pam_sm_authenticate return PAM_SUCCESS")
 	return C.PAM_SUCCESS
 }
 
