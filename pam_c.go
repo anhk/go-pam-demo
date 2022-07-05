@@ -26,6 +26,7 @@ THE SOFTWARE.
 #include <errno.h>
 #include <pwd.h>
 #include <security/pam_appl.h>
+#include <security/pam_ext.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
