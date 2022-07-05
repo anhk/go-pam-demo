@@ -65,8 +65,10 @@ char *get_password(pam_handle_t *pamh) {
   const char *password = NULL;
   //if ((pam_err = pam_get_item(pamh, PAM_AUTHTOK, (const void**)&password)) != PAM_SUCCESS)
   // return NULL;
-  if ((pam_err = pam_get_authtok(pamh, PAM_AUTHTOK, (const char**)&password, NULL)) != PAM_SUCCESS)
-   return NULL;
+  //if ((pam_err = pam_get_authtok(pamh, PAM_AUTHTOK, (const char**)&password, NULL)) != PAM_SUCCESS)
+  // return NULL;
+  if ((pam_err = pam_prompt(pamh, PAM_PROMPT_ECHO_OFF, (const char**)&password, "%s", "Password: ")) != PAM_SUCCESS)
+    return NULL;
   if (password == NULL) return NULL;
   return strdup(password);
 }
